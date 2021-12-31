@@ -1,0 +1,38 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Stack;
+
+public class Main {//No4949 균형잡힌 세상
+    public static void main(String[] args) throws IOException {X
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String input = br.readLine();
+
+        HashMap<String, String> hsmp = new HashMap<String, String>();
+        hsmp.put("]", "[");
+        hsmp.put(")", "(");
+        Stack<String> stack;
+        boolean chkFlag;
+        while (!input.equals(".")) {
+            stack = new Stack<String>();
+            String[] strArr = input.split("");
+            chkFlag = true;
+
+            for (String s : strArr) {
+                if (s.equals("[") || s.equals("(")) {
+                    stack.push(s);
+                } else if (s.equals("]") || s.equals(")")) {
+                    if (stack.isEmpty() || !stack.peek().equals(hsmp.get(s))) {
+                        chkFlag = false;
+                        break;
+                    } else stack.pop();
+                }
+            }
+            if (stack.isEmpty() && chkFlag) System.out.println("yes");
+            else System.out.println("no");
+
+            input = br.readLine();
+        }
+    }
+}

@@ -1,0 +1,45 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.Stack;
+
+public class Main {// no2493 탑
+
+	public static void main(String[] args) throws IOException {
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+		int cnt = Integer.parseInt(br.readLine());
+		String[] razers = br.readLine().split(" ");
+
+		Stack<Integer> maxRazer = new Stack<Integer>();
+
+		for (int i = 0; i < razers.length; i++) {
+
+			while (!maxRazer.isEmpty()) {
+				if (Integer.parseInt(razers[maxRazer.peek()]) > Integer.parseInt(razers[i])) {
+					bw.write(maxRazer.peek() + 1 + " ");
+					maxRazer.push(i);
+					break;
+				} else {
+					maxRazer.pop();
+				}
+			}
+
+			if (maxRazer.isEmpty()) {
+				bw.write("0 ");
+				maxRazer.push(i);
+			}
+		}
+
+		bw.flush();
+		bw.close();
+
+	}
+}
+
+// No17298 오큰수의 왼쪽버전
+// 동일하게 stack을 쌓았다. 시간제한이 좀 더 여유롭고 왼쪽부터 탐색할수 있어서 보다 수월했다.

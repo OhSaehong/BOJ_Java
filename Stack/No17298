@@ -1,0 +1,59 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.Stack;
+
+public class Main {// no17298 오큰수
+
+	public static void main(String[] args) throws IOException {
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+		br.readLine();
+		String[] arr = br.readLine().split(" ");
+
+		Stack<Integer> recordMax = new Stack<Integer>();
+		Stack<Integer> answer = new Stack<Integer>();
+		for (int i = arr.length - 1; i >= 0; i--) {
+
+			while (!recordMax.isEmpty()) {
+				if (recordMax.peek() > Integer.parseInt(arr[i])) {
+					answer.push(recordMax.peek());
+					recordMax.push(Integer.parseInt(arr[i]));
+					break;
+				} else {
+					recordMax.pop();
+				}
+
+			}
+
+			if (recordMax.isEmpty()) {
+				recordMax.push(Integer.parseInt(arr[i]));
+				answer.push(-1);
+
+			}
+		}
+
+		while (!answer.isEmpty()) {
+			bw.write(answer.pop() + " ");
+		}
+
+		bw.flush();
+		bw.close();
+
+	}
+}
+
+// 시간 초과로 깨나 고새했던 문제. BufferedReader, BufferedWriter의 부재도 시간 초과를 불러일으키는데에 한몫 했지만,
+// 문제를 관통하는 시간 초과 해결 방법은 "한번 기록한 오큰수를 다시 불러다 쓸수있냐"이다.
+// 즉  "7, 16, 3, 1, 14, 8, 2, 5, 11, 13, 17" 과 같은 집합이 주어졌다고 할 때, 14는 오른쪽의 큰수를 찾기위해 마지막 배열까지 탐색해야한다.
+// 그런데 14의 '오큰수'가 17인 것을 통해 오큰수를 바로 서치할수 있으면 어떨까?
+// 이러한 방식을 적용하기 위해 오른쪽부터 탐색한다.
+// 또한 비교 대상보다 더 큰수가 있으면 해당 값이 나올때까지 Stack을 탐색하며(pop) 비교 대상보다 큰 수는 Stack에 담는 것을 유지하며 비교 대상도 Stack에 쌓는다.
+// 8이 비교대상인 경우, recordMax Stack은 다음과 같다. push순 [2, 5, 11, 13, 17]
+// Stack을 비울때까지 더 큰수가 없다면  비교 대상을 Stack에 쌓는 방식을 취하도록했다.(새로운 오큰수 등장)
+// 그렇다면 16이 비교대상이 되는 과정에서의 recordMax Stack은 다음과 같이 쌓였을 것이다. [3, 14, 17]
+// 마지막 비교대상인 7을 비교할때는 16보다 작은 3과 14는 pop으로 빠지고, [16, 17]이 recoredMax Stack에 쌓일것이다.

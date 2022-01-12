@@ -1,0 +1,61 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.Stack;
+
+public class Main {// no9935 문자열폭발
+
+	public static void main(String[] args) throws IOException {
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+		String question = br.readLine();
+		String bomb = br.readLine();
+		int bombLen = bomb.length();
+		Stack<Character> stack = new Stack<>();
+
+		for (int i = 0; i < question.length(); i++) {
+			stack.push(question.charAt(i));
+
+			if (stack.size() >= bombLen) {
+
+				boolean pang = true;
+				int cal = 0;
+				for (int j = stack.size() - bombLen; j < stack.size(); j++) {
+					if (!stack.get(j).equals(bomb.charAt(cal++))) {
+						pang = false;
+						break;
+					}
+				}
+				if (pang) {
+					for (int j = 0; j < bombLen; j++) {
+						stack.pop();
+					}
+				}
+
+			}
+		}
+
+		if (stack.size() == 0) {
+			bw.write("FRULA");
+		} else {
+			for (Character c : stack) {
+				bw.write(c);
+			}
+
+		}
+		bw.flush();
+		bw.close();
+
+	}
+}
+
+// 오큰수 등의 문제에서는 중복으로 탐색해야하는 경우의 Stack 용도를 알아보았다면
+// 이번 문자열 폭발의 문제에서는 '내가 탐색할 대상의 갯수를 특정할 수 있을때' 적절한 push 및 pop,
+// 그리고 stack내 대상의 위치를 탐색함으로써 값을 출력하는 방식에 대해 배울수 있었다.
+// 대상의 길이가 100만개까지 늘어날 수 있기 때문에 문자열 method replaceAll, split등을 사용하면 메모리 초과가 발생한다.
+// stack으로 특정 대상만 탐색 하여 push와 pop연산을 수행하므로 메모리를 효율적으로 쓸 수 있다.
+// https://loosie.tistory.com/317 참고하였다.

@@ -1,0 +1,81 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Stack;
+
+public class Main {// no2504 괄호의 값
+	public static void main(String[] args) throws IOException {
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		Stack<String> stack = new Stack<>();
+
+		String[] quest = br.readLine().split("");
+		String nextGualho = "";
+		boolean stop = false;
+		int cal = 0;
+
+		for (int i = 0; i < quest.length; i++) {
+			nextGualho = quest[i];
+			if (stack.isEmpty() || nextGualho.equals("[") || nextGualho.equals("(")) {// stack이 비었거나 [ ( 인경우에는 push
+				stack.push(nextGualho);
+			} else {// ], )일 경우
+
+				// nextGualho 소모 case
+				if (stack.peek().equals("(") && nextGualho.equals(")")) {// ()
+					stack.pop();
+					stack.push("2");
+
+				} else if (stack.peek().equals("[") && nextGualho.equals("]")) {// []
+					stack.pop();
+					stack.push("3");
+
+				} else if (isInteger(stack.peek())) {
+					if (stack.size() == 1) {
+						stop = true;
+						break;
+					}
+					if (stack.get(stack.size() - 2).equals("[") && nextGualho.equals("]")) {
+						cal = Integer.parseInt(stack.pop());
+						stack.pop();
+						stack.push(String.valueOf(cal * 3));
+					} else if (stack.get(stack.size() - 2).equals("(") && nextGualho.equals(")")) {
+						cal = Integer.parseInt(stack.pop());
+						stack.pop();
+						stack.push(String.valueOf(cal * 2));
+					} else {
+						stop = true;
+						break;
+					}
+				}
+
+				if (stack.size() >= 2 && isInteger(stack.peek()) && isInteger(stack.get(stack.size() - 2))) {
+					stack.push(String.valueOf(Integer.parseInt(stack.pop()) + Integer.parseInt(stack.pop())));
+				}
+			}
+		}
+
+		if (stop == true || stack.size() != 1 || !isInteger(stack.peek())) {
+			System.out.println("0");
+		} else {
+			System.out.println(stack.pop());
+		}
+
+	}
+
+	public static boolean isInteger(String stack) {
+		try {
+			Integer.parseInt(stack);
+			return true;
+		} catch (NumberFormatException e) {
+			return false;
+		}
+	}
+
+}
+
+// [, ( 등 계산되기 전의 괄호는 push를 하고
+// ], ) 등 계산이 필요한 괄호가 나오는 경우에는 peek의 값이 무엇인지 판단함으로써 계산을 바로해준 뒤 push 하도록 설계하였다.
+// 해결 방식을 구상하면서 떠오른 예외들이 많았다만, 예외처리까지 하면서 코드를 짜려고하다보니 정리가 잘 되지 않았다. 
+// 예외 case는 그때그때 떠오르는 대로 test case를 작성해두되, 우선 정상적으로 입력받을 때 수행이 되도록 코드를 짜는것이 우선이라는 것을 깨달았다.
+// 그 후 trouble shooting을 하면서 예외처리를 깔끔히 반영하도록 해야겠다.
+

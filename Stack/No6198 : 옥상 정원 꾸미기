@@ -1,0 +1,51 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Iterator;
+import java.util.Stack;
+
+public class Main {// no6198 옥상정원 꾸미기
+	public static void main(String[] args) throws IOException {
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int buildCnt = Integer.parseInt(br.readLine());
+		long[] building = new long[buildCnt];
+		Stack<Long> posStack = new Stack<>();
+		Stack<Long> viewStack = new Stack<>();
+		long ans = 0;
+		for (int i = 0; i < buildCnt; i++) {
+			building[i] = Long.parseLong(br.readLine());
+		}
+		long cnt = 0;
+		for (int i = building.length - 1; i >= 0; i--) {
+			if (posStack.isEmpty() || building[i] < posStack.peek()) {
+				posStack.push(building[i]);
+				viewStack.push(cnt);
+				cnt = 0;
+			} else // (building[i]>posStack.peek()) {
+			{
+				while (building[i] > posStack.peek()) {
+					posStack.pop();
+					cnt += viewStack.pop() + 1;
+
+					if (posStack.isEmpty()) {
+						break;
+					}
+
+				}
+				posStack.push(building[i]);
+				viewStack.push(cnt);
+				ans += cnt;
+				cnt = 0;
+
+			}
+		}
+
+		System.out.println(ans);
+
+	}
+
+}
+
+//Stack을 필요에의해 2개 사용하였더니 생각보다 수월하게 문제가 풀렸다.
+//하나는 건물의 길이를, 또 하나는 해당 건물이 볼 수 있는 갯수를 담고, pop과 push는 동일하게 해주었다.

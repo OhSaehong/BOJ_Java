@@ -1,0 +1,57 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Stack;
+
+public class Main {// no5397 키로거
+	public static void main(String[] args) throws IOException {
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+		int testNum = Integer.parseInt(br.readLine());
+
+		Stack<String> leftStack;
+		Stack<String> rightStack;
+
+		for (int i = 0; i < testNum; i++) {
+			leftStack = new Stack<>();
+			rightStack = new Stack<>();
+
+			String[] testCase = br.readLine().split("");
+			String chr = "";
+			for (int j = 0; j < testCase.length; j++) {
+				chr = testCase[j];
+				if (chr.equals("-") && !leftStack.isEmpty()) {
+					leftStack.pop();
+				} else if (chr.equals(">") && !rightStack.isEmpty()) {
+					leftStack.push(rightStack.pop());
+				} else if (chr.equals("<") && !leftStack.isEmpty()) {
+					rightStack.push(leftStack.pop());
+				} else if (!chr.equals("-") && !chr.equals(">") && !chr.equals("<")) {
+					leftStack.push(chr);
+				}
+
+			}
+			StringBuilder sb = new StringBuilder();
+
+			for (String string : leftStack) {
+				sb.append(string);
+			}
+			while (!rightStack.isEmpty()) {
+				sb.append(rightStack.pop());
+
+			}
+
+			System.out.println(sb.toString());
+
+		}
+
+	}
+
+}
+
+//재미있는 문제였다.
+//Stack 두 개를 사용해서 키보드 커서가 있는 위치를 기준으로
+//커서가 왼쪽으로 옮기면 왼쪽 Stack의 값을 pop하여 오른쪽 Stack으로 push,
+//오른쪽의 경우 오른쪽 Stack의 값을 pop하여 왼쪽 Stack으로 push 한다.
+//Stack 두 개로 간단하게 구현 가능했다.

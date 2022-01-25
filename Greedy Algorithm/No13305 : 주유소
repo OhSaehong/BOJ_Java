@@ -1,0 +1,42 @@
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.Scanner;
+import java.util.Stack;
+
+public class Main {// no13305_Using Greedy Algorithm
+	public static void main(String[] args) throws IOException {
+
+		Scanner sc = new Scanner(System.in);
+
+		int stationNum = Integer.parseInt(sc.nextLine());
+
+		long[] feeArr = new long[stationNum - 1];
+		long[] stationArr = new long[stationNum];
+
+		for (int i = 0; i < feeArr.length; i++) {
+			feeArr[i] = Integer.parseInt(sc.next());
+		}
+		sc.nextLine();
+
+		for (int i = 0; i < stationArr.length; i++) {
+			stationArr[i] = Integer.parseInt(sc.next());
+		}
+
+		long ans = 0;
+
+		long minVal = 999999999999999999L;
+
+		for (int i = 0; i < stationArr.length - 1; i++) {
+			if (stationArr[i] < minVal) {
+				minVal = stationArr[i];
+			}
+			ans += minVal * feeArr[i];
+		}
+
+		System.out.println(ans);
+
+	}
+}
+
+//그리디 알고리즘 기본 문제이다. 역시 Stack보다는 문제의 needs에 맞추어 푸는 것이 더 효율적이다.
+//코드의 길이가 간결하고, 시간도 짧다.

@@ -1,0 +1,59 @@
+import java.io.IOException;
+import java.util.Scanner;
+import java.util.Stack;
+
+public class Main {// no13305_Using Stack
+	public static void main(String[] args) throws IOException {
+
+		Scanner sc = new Scanner(System.in);
+
+		int stationNum = Integer.parseInt(sc.nextLine());
+
+		long[] feeArr = new long[stationNum - 1];
+		long[] stationArr = new long[stationNum];
+
+		for (int i = 0; i < feeArr.length; i++) {
+			feeArr[i] = Integer.parseInt(sc.next());
+		}
+		sc.nextLine();
+
+		for (int i = 0; i < stationArr.length; i++) {
+			stationArr[i] = Integer.parseInt(sc.next());
+		}
+
+		Stack<Long> feeStack = new Stack<>();
+		Stack<Long> stationStack = new Stack<>();
+
+		for (int i = stationArr.length - 2; i >= 0; i--) {
+			if (stationStack.isEmpty() || stationStack.peek() < stationArr[i]) {
+				stationStack.push(stationArr[i]);
+				feeStack.push(feeArr[i]);
+			} else {
+				while (!stationStack.isEmpty() && stationStack.peek() > stationArr[i]) {// 3 3
+					stationStack.pop();// 2
+					feeArr[i] += feeStack.pop();
+				}
+				stationStack.push(stationArr[i]);
+				feeStack.push(feeArr[i]);
+			}
+		}
+
+		long ans = 0;
+		while (!feeStack.isEmpty()) {
+			ans += feeStack.pop() * stationStack.pop();
+		}
+
+		System.out.println(ans);
+
+	}
+}
+
+//알고리즘 기법은 그 기법 하나당 하나의 무기를 장착하는 것과 같다고한다.
+//이번 문제는 Stack으로도 풀렸던 문제로, 
+//(요즘 Stack 예제를 주로 풀다보니 회로가 그쪽으로 돌아서 그리디 알고리즘을 이용하려고 했던 원래 의도와 다르게 한번 풀어보았다.)
+//연마를 하다보면 무기의 단순한 목적 그 이상으로도 사용될 수 있음을 생각하게 된 것 같다.
+//(그렇게 보기에는 문제 난이도는 낮은 편이긴 하다.)
+//무튼, Stack을 2개를 정의하여 오른쪽부터 탐색함으로써  미리 담은 주유비보다 더 적은 주유비를 제공하는 주유소가 있다면 pop한 뒤 push,
+//더 비싼 주유소만 나온다면 그대로 push하도록 해주었다.
+//다음으로는 그리디 알고리즘을 이용하여 풀어보겠다.
+

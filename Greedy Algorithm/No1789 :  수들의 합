@@ -1,0 +1,75 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+public class Main {// no1789 수들의 합_Greedy Algorithm
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+		long ans = Long.parseLong(br.readLine());
+
+		int cnt = 1;// 1 2 3
+		while (true) {
+			ans -= cnt;
+			if (ans < 0) {
+				cnt -= 1;
+				break;
+			}
+			if (ans == 0) {
+				break;
+			}
+
+			cnt++;
+		}
+
+		System.out.println(cnt);
+
+	}
+}
+
+//Greedy Algorithm 문제이다. 역시 Stack으로도 풀어보았다.
+//Stack을 사용했을 때의 작점은 보다 직관적이라는 것이다.
+//다만 Stack을 구현하지 않아도 풀리는 Greedy Algorithm 문제는 잡아먹는 메모리나, 소요 시간을 생각했을 때 구현하지 않는 것이 낫다.
+//아래는 Stack으로 구현한 소스이다.
+
+
+//import java.io.BufferedReader;
+//import java.io.IOException;
+//import java.io.InputStreamReader;
+//import java.util.Stack;
+//
+//public class no1789Stack {// no1789 수들의 합
+//	public static void main(String[] args) throws IOException {
+//		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+//
+//		long ans = Long.parseLong(br.readLine());
+//
+//		Stack<Long> stack = new Stack<>();
+//
+//		long sum = 0;
+//
+//		long num = 1;
+//		while (true) {
+//
+//			if (stack.isEmpty() || sum < ans) {
+//				stack.push(num);
+//				sum += num;
+//				num++;
+//			} else if (sum > ans) {
+//				sum -= stack.pop();
+//				num = stack.pop() + 1;
+//				sum -= num - 1;
+//				stack.push(num);
+//				sum += num;
+//				num++;
+//
+//			} else {
+//				break;
+//			}
+//
+//		}
+//
+//		System.out.println(stack.size());
+//
+//	}
+//}

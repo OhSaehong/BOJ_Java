@@ -1,0 +1,33 @@
+import java.io.IOException;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+
+        Scanner sc = new Scanner(System.in);
+
+        int cnt = 0;
+        while (true) {
+            int L = Integer.parseInt(sc.next());
+            int P = Integer.parseInt(sc.next());
+            int V = Integer.parseInt(sc.next());
+            sc.nextLine();
+
+            if (L == 0 && P == 0 && V == 0) {
+                break;
+            }
+
+            int ans = 0;
+            while (V - P > 0) {
+                V -= P;
+                ans += L;
+            }
+            int tmp = V > L ? L : V;
+
+            System.out.println("Case " + (++cnt) + ": " + (int) (ans + tmp));
+
+
+        }
+
+    }
+}

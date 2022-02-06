@@ -1,0 +1,58 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+public class Main {
+    public static void main(String[] args) throws IOException {//No11047 동전 0
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        int coins = Integer.parseInt(st.nextToken());
+        int pay = Integer.parseInt(st.nextToken());
+
+        int[] coinType = new int[coins];
+        int answ = 1000000000;
+        int tmp;
+        for (int i = 0; i < coins; i++) {
+            coinType[i] = Integer.parseInt(br.readLine());
+
+            int cnt = i;
+            int sum = pay;
+            tmp = 0;
+            while (cnt != -1 && sum != 0) {
+                int divide = sum / coinType[cnt];// 840
+                sum -= coinType[cnt] * divide;
+                tmp += divide;
+                cnt--;
+            }
+            if (tmp < answ) {
+                answ = tmp;
+            }
+        }
+        System.out.println(answ);
+
+
+    }
+}
+//
+//    동전의 종류를 정의하고, 지불해야하는 총 갯수의 최솟값을 만들어야하는 문제.
+//        처음에는 동전 종류를 다 받은 뒤에, 지불금액에서 큰 종류별로 금액을 빼면 최솟값이 되는것이 아닌가? 했는데 생각해보면 예외가 있다.
+//        예를들어 예제에 나온
+//
+//        10 4200
+//        1
+//        5
+//        10
+//        50
+//        100
+//        500
+//        1000
+//        5000
+//        10000
+//        50000
+//        의 경우에 정답은 6이지만
+//        추가로 840원짜리 동전이 있다고 가정하면,
+//        정답은 5여야하지만 지불금액에서 큰 종류별로 빼게되면 6으로 출력되므로 오답이다.
+//        따라서 그리디 알고리즘을 이용하여 모든 가능성을 계산하여 최소 갯수일때를 정답으로 출력했다.

@@ -1,0 +1,60 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collections;
+
+public class Main {
+    public static void main(String[] args) throws IOException {//No1339 단어 수학
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int nums = Integer.parseInt(br.readLine());
+        ArrayList<String> alpha = new ArrayList<>();
+        ArrayList<Long> arr = new ArrayList<>();
+        for (int i = 0; i < nums; i++) {//size가 3일때 i가 0이면 100, 1이면 10.. 2이면 1
+            String[] stc = br.readLine().split("");
+            for (int j = 0; j < stc.length; j++) {
+
+                if (alpha.isEmpty()) {//
+                    alpha.add(stc[j]);
+                    arr.add((long) Math.pow(10, stc.length - j - 1));
+                } else {
+                    boolean tf = false;
+                    int cnt = alpha.size() - 1;
+                    while (cnt != -1) {
+                        if (alpha.get(cnt).equals(stc[j])) {
+                            arr.set(cnt, (long) (arr.get(cnt) + Math.pow(10, stc.length - j - 1)));
+                            tf = true;
+                            break;
+                        }
+                        cnt--;
+                    }
+                    if (tf == false) {
+                        alpha.add(stc[j]);
+                        arr.add((long) Math.pow(10, stc.length - j - 1));
+                    }
+                }
+            }
+        }
+        int ans = 0;
+        int strt = 9;
+        Collections.sort(arr, Collections.reverseOrder());
+        for (long x : arr) {
+            ans += x * (strt--);
+        }
+        System.out.println(ans);
+    }
+}
+
+//    가장 큰숫자가 들어가야 할 알파벳을 어떻게 구할수 있을 까 생각하다가,
+//    string값들을 다 더한 뒤에 알파벳들을 (숫자*알파벳) 형태로 정리한뒤에 내림차순으로 정렬하면 좋겠다 싶었다.
+//        예를들어
+//        AAA
+//        AAA는
+//        222*A가 될 것이고,
+//        AB
+//        BA는
+//        11A + 11B가 될 것이다.
+//        알파벳 종류는 최대 9개일 것이기때문에 값을 자주 추가하는데 부적합한 ArrayList를 사용해도 문제없을 것이라는 판단이 들었고
+//        알파벳을 담는 ArrayList와 해당 알파벳의 총 합을 담은 ArrayList를 따로 정의하였다.
+//        총 합을 담은 ArrayList를 내림차순 정렬한 뒤에, 9부터 값을 곱해줘서 총합을 출력하였다.

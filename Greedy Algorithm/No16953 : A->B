@@ -1,0 +1,43 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+public class Main {// no16953 A->B
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer tk = new StringTokenizer(br.readLine());
+		int fin = Integer.parseInt(tk.nextToken());
+		int strt = Integer.parseInt(tk.nextToken());
+		int cnt = 1;
+
+		while (true) {
+			if (strt == fin) {
+				break;
+			} else if (strt < fin) {
+				cnt = -1;
+				break;
+			} else if (String.valueOf(strt).charAt(String.valueOf(strt).length() - 1) == '1') {
+				strt = Integer.parseInt(String.valueOf(strt).substring(0, String.valueOf(strt).length() - 1));
+				cnt++;
+			} else if (strt % 2 == 0) {
+				strt /= 2;
+				cnt++;
+
+			} else {
+				cnt = -1;
+				break;
+			}
+		}
+
+		System.out.println(cnt);
+
+	}
+}
+//숫자 A가 숫자 B가 되기 위한 최소 횟수를 구하는 문제이다.
+//숫자 A에 2배를 곱하거나, 마지막자리에 1을 추가하는 방법만 사용해야한다.
+//말이 최소 횟수를 구하는 문제이지, 사실 선택지는 둘중에 하나뿐이다.
+//숫자 B를 숫자 A로 어떻게 만들것인가? 라는 방식으로 문제를 푸는 것이 훨씬 편하다.
+//예를들어 B가 40021고 A가 100라고하면, B는 역으로 계산했을 때 4002 -> 2001 -> 200 -> 100의 형태로 돌아가는 경우밖에 존재하지 않는다.
+//따라서 2로 나누어 떨어지거나, 마지막 자리수가 1이거나(홀수) else if를 사용하면 쉽게 풀린다.
+//이 문제에서는 greedy algorithm이 순간의 최선의 선택을 하는 방법보다는.. 어떻게 해야 쉽게 풀수 있는지에 대한 수학적 사고방식이 더 요구된 것 같다.

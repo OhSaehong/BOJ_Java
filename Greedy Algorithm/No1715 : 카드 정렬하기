@@ -6,55 +6,64 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class Main {// no1715 카드 정렬하기
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		int nums = Integer.parseInt(br.readLine());
-		int[] arr = new int[nums];
 
-		for (int i = 0; i < arr.length; i++) {
-			arr[i] = Integer.parseInt(br.readLine());
-		}
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int nums = Integer.parseInt(br.readLine());
+        int[] arr = new int[nums];
 
-		Arrays.sort(arr);
-		Queue<Integer> min = new LinkedList<>();
-		long ans = 0;
-		int min1 = 0;
-		int min2 = 0;
-		int cnt = 0;
-		boolean chk = false;
-		
-		while (cnt != arr.length - 1 || !min.isEmpty()) {
-			
-			if (min.isEmpty() || (!chk && min.peek() > arr[cnt])) {
-				min1 = arr[cnt];
-				cnt++;// 다음 arr로 비교해야함
-			} else {
-				min1 = min.poll();
-			}
-			if (cnt>=arr.length) {
-				chk = true;
-			}
-			
-			System.out.println(cnt);
-			System.out.println(arr.length);
-			System.out.println(chk);
-			if (min.isEmpty() || (!chk && min.peek() > arr[cnt])) {
-				System.out.println(arr[cnt]);
-				min2 = arr[cnt];
-				cnt++;// 다음 arr로 비교해야함
-			} else {
-				min2 = min.poll();
-			}
-			
-			if (cnt>=arr.length) {
-				chk = true;
-			}
-			ans += min1 + min2;
-			min.add(min1 + min2);
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = Integer.parseInt(br.readLine());
+        }
 
-		}
-		
-		System.out.println(ans);
+        Arrays.sort(arr);
+        Queue<Integer> min = new LinkedList<>();
+        long ans = 0;
+        int min1 = 0;
+        int min2 = 0;
+        int cnt = 0;
+        boolean chk = false;
 
-	}
+        while (cnt != arr.length - 1 || !min.isEmpty()) {
+
+            if (min.isEmpty() || (!chk && min.peek() > arr[cnt])) {
+                min1 = arr[cnt];
+                cnt++;// 다음 arr로 비교해야함
+            } else {
+                min1 = min.poll();
+            }
+            if (cnt >= arr.length) {
+                chk = true;
+            }
+
+            if (cnt == arr.length && min.isEmpty()) {
+                break;
+            }
+
+            if (min.isEmpty() || (!chk && min.peek() > arr[cnt])) {
+                min2 = arr[cnt];
+                cnt++;// 다음 arr로 비교해야함
+            } else {
+                min2 = min.poll();
+            }
+
+            if (cnt >= arr.length) {
+                chk = true;
+            }
+            ans += min1 + min2;
+            min.add(min1 + min2);
+
+        }
+
+        System.out.println(ans);
+
+    }
 }
+
+//    Queue와 배열을 동시에 사용하여 풀었다.
+//    처음에는 '받은 숫자들 중 가장 작은 두 숫자는 총 숫자의 갯수-1 만큼, 그 다음 작은 숫자는 총 숫자의 갯수-2만큼..... 제을 큰 숫자는 1만큼 더해주면 아닌가?' 라고 생각했다.
+//    [ 10, 20 ,30, 40 을 받았다고 할때 (10+20) 비교, (10+20+30) 비교, (10+20+30+40) 비교하여 정답이 (10+20)+(10+20+30)+(10+20+30+40) = 190 이 나오는 것처럼 ]
+//    다만 이 논리에는 작은 두 숫자를 더한 값이 새로운 집합에서 최솟값이라는 보장이 없다는 것이다.
+//    예를들어 [ 50, 60, 70, 80 ] 값을 받았다면, (50+60)을 비교한 뒤, [70+80]을 비교해야하는 것이다.
+//    더한 값을 다시 배열에 넣는 방식으로 ArrayList를 사용할수도 있겠지만, 정렬이 너무 잦을 것 같아 포기하고
+//    새로 더한 값은 Queue에 담아서, 기존 정렬된 배열과, Queue의 peek 값중 어떤것이 작은 값인가? 를 check하여 비교 대상 2개를 추출하도록 구성하였다.

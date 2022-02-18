@@ -1,0 +1,100 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+public class Main {// No1080 : 행렬
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int x = Integer.parseInt(st.nextToken());
+        int y = Integer.parseInt(st.nextToken());
+
+        int[][] arr1 = new int[x][y];
+        int[][] arr2 = new int[x][y];
+
+        for (int i = 0; i < x; i++) {
+            String[] tmp = br.readLine().split("");
+            for (int j = 0; j < y; j++) {
+                arr1[i][j] = Integer.parseInt(tmp[j]);
+            }
+        }
+        for (int i = 0; i < x; i++) {
+            String[] tmp = br.readLine().split("");
+            for (int j = 0; j < y; j++) {
+                arr2[i][j] = Integer.parseInt(tmp[j]);
+            }
+        }
+
+        int ans = 0;
+        if (x < 3 || y < 3) {
+            stop:
+            for (int i = 0; i < x; i++) {
+                for (int j = 0; j < y; j++) {
+                    if (arr1[i][j] != arr2[i][j]) {
+                        ans = -1;
+                        break stop;
+                    }
+                }
+            }
+            System.out.println(ans);
+        } else {
+            for (int i = 0; i < x - 2; i++){
+                for (int j = 0; j < y - 2; j++) {
+                    if (arr1[i][j] != arr2[i][j]) {
+                        int tmpX = i;
+                        int tmpY = j;
+                        ans++;
+                        for (int k = tmpX; k < tmpX + 3; k++) {
+                            for (int l = tmpY; l < tmpY + 3; l++) {
+                                arr1[k][l] = Change(arr1[k][l]);
+                            }
+                        }
+
+                    }
+                }
+            }
+
+            stop2 : for (int i = 0; i < x; i++) {
+                for (int j = 0; j < y; j++) {
+                    if (arr1[i][j] != arr2[i][j]) {
+                        ans = -1;
+                        break stop2;
+                    }
+                }
+            }
+            System.out.println(ans);
+        }
+    }
+
+    public static int Change(int num) {
+        if (num == 0) {
+            return 1;
+        } else {
+            return 0;
+        }
+
+
+    }
+}
+
+//        예제에서 유추할 수 있듯 3x3크기의 부분행렬을 한번에 바꾸기 때문에 그보다 작은 행렬이 문제로 나온다면
+//
+//        다를 경우 -1, 같을 경우 0을 출력하는 것으로 판단할 수 있다.
+//
+//        문제는 3x3이상의 행렬인데, 이 경우에는 부분행렬중 좌측 최상단의 값만 이용하여 비교하는 식으로했다.
+//
+//        좌측 상단에서 우측 하단으로 탐색하면 언제나 좌측 최상단의 값은 해당 탐색 이후로는 변경할 수 없는 값이된다.
+//
+//        이를 바탕으로 행렬 A와 행렬 B의 좌측 최상단의 값만 비교하고, 같으면 다음 탐색으로 pass,
+//
+//        다르면 최상단을 포함한 3x3크기의 부분행렬을 모두 바꾸어주는 방식으로 전개한다.
+//
+//        메소드를 더 다양하게 사용했더라면 코드 길이는 훨씬 줄었을 문제이다. 그래도 소요시간 자체는 오래걸리지 않았다.
+//
+//        1. 2차원 배열에 행렬 A, B를 받는다.
+//        2. 3x3 행렬보다 행이나 열이 작은 경우에는 비교 후 0 혹은 -1을 출력하게 한다.
+//        3. 그 외의 경우에는 좌측 최상단의 값부터 (N-2)*(M-2) 번 만큼 탐색해준다.
+//        4. A, B의 좌측 최상단 값이 다른 경우 행렬 A(혹은 B)의 값을 변경해준다.(3x3, 총 9개)
+//        5. 변경한 횟수를 cnt하고, 최종적으로 행렬이 일치하면 cnt를, 불일치하면 -1을 출력한다.

@@ -1,0 +1,34 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+public class Main {// No2847 : 게임을 만든 동준이
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int N = Integer.parseInt(br.readLine());
+        Integer[] level = new Integer[N];
+        for (int i = 0; i < N; i++) {
+            level[i] = Integer.parseInt(br.readLine());
+        }
+        int cnt = 0;
+        int base = level[N - 1];
+        for (int i = level.length - 2; i >= 0; i--) {
+            if (level[i] > base - 1) {//하위 level의 점수가 상위 level의 점수보다 클 때
+                cnt += level[i] - base + 1;
+                base--;
+            } else {//하위 level의 점수가 상위 level의 점수보다 작을 때
+                base = level[i];
+            }
+        }
+
+        System.out.println(cnt);
+    }
+}
+
+//        받아온 값들을 동일한 점수가 없는 오름차순으로 만드는 문제이다.
+//
+//        Greedy Algorithm 응용 문제를 하면서 정렬을 수행하는 것에 익숙해졌는지 냅다 정렬을 하는 실수를 범했다.
+//
+//        결과적으로는 정렬할 필요없이, 순서대로 배열로 받아 가장 마지막부터 탐색하며 깎아야 하는 숫자를 count하여 풀수 있었다.
+

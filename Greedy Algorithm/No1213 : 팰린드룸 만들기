@@ -1,0 +1,72 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Stack;
+
+public class Main {// No1213 팰린드롬 만들기
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
+		String[] text = br.readLine().split("");
+		Stack<String> stack = new Stack<>();
+
+		Arrays.sort(text);
+
+		a: if (text.length % 2 == 0) {
+			for (int i = 0; i < text.length; i += 2) {
+				if (text[i].equals(text[i + 1])) {
+					sb.append(text[i]);
+					stack.push(text[i]);
+				} else {
+					System.out.println("I'm Sorry Hansoo");
+					break a;
+				}
+			}
+			while (!stack.isEmpty()) {
+				sb.append(stack.pop());
+			}
+			System.out.println(sb.toString());
+		} else {
+			String temp = "TMP";
+			for (int i = 0; i < text.length - 1; i += 2) {
+				if (text[i].equals(text[i + 1])) {
+					sb.append(text[i]);
+					stack.push(text[i]);
+				} else if (temp.equals("TMP")) {
+					temp = text[i];
+					i--;
+				} else {
+					System.out.println("I'm Sorry Hansoo");
+					break a;
+				}
+			}
+			if (temp.equals("TMP")) {
+				temp = text[text.length - 1];
+			}
+			sb.append(temp);
+			while (!stack.isEmpty()) {
+				sb.append(stack.pop());
+			}
+			System.out.println(sb.toString());
+		}
+	}
+}
+
+//팰린드롬이란 회문, 즉 거꾸로 읽어도 같은 말이 되는 단어 혹은 문장을 말한다.
+//
+//단어가 주어졌을 때 사전순으로 앞서는 팰린드롬을 만들고,
+//
+//만들 수 없다고 판단되면 오류 메시지를 출력하는 문제이다.
+//
+//단어가 홀수인 경우와 짝수인 경우로 나누어 풀었다.
+//
+//사전순으로 출력되게 해야하므로, 배열을 받아 정렬한 뒤
+//
+//짝수인 경우에는 for문을 돌며 i번째와 i+1번째를 비교하여 StringBuilder로 append함과 동시에 Stack에 push를 하고 두 문자가 다른 경우에는 즉시 오류 처리하며 종료하도록 했다.
+//오류 처리가 되지 않은 경우에는 append한 String 값에 stack을 pop하여 단어를 추가 append하여 출력하도록하였다.
+//
+//홀수인 경우가 조금더 복잡했는데, for문을 돌며 i번째와 i+1번째를 비교하되 달라도 한번은 ok한다. (대신 해당 값이 유일한 가운데 문자라는 전제하에 해당 단어를 별개의 String 변수로 담아둔다.)
+//skip한 i번째 대신, 나머지 문자들끼리 비교할 수 있도록 i를 -1처리해준다.
+//또 다른 경우가 발생한다면 즉시 오류 처리하며 종료하도록 한다.
+//오류 처리가 되지 않은 경우에는 append한 String 값에 가운데 문제를 append하고, 최종적으로 stack을 pop하여 단어를 추가 append하여 출력하도록한다.

@@ -1,0 +1,37 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+public class Main {// No1783 : 병든 나이트
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String[] txt = br.readLine().split(" ");
+
+        int N = Integer.parseInt(txt[0]);//세로
+        int M = Integer.parseInt(txt[1]);//가로
+        int ans = 1;
+
+        switch (N) {
+            case 1:
+                break;
+            case 2:
+                ans = (M - 1) / 2 + 1;
+                if (ans > 4) {
+                    ans = 4;
+                }
+                break;
+            default:
+                if (M >= 7) {
+                    ans = M - 2;
+                } else if (M >= 4) {
+                    ans = 4;
+                } else {
+                    ans = M;
+                }
+                break;
+        }
+
+        System.out.println(ans);
+    }
+}

@@ -1,0 +1,45 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.StringTokenizer;
+
+public class Main {// No2437 : 저울
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int len = Integer.parseInt(br.readLine());
+        int[] num = new int[len];
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        for (int i = 0; i < len; i++) {
+            num[i] = Integer.parseInt(st.nextToken());
+        }
+        Arrays.sort(num);
+        int sum = 0;
+        if (num[0] != 1) {
+            System.out.println(1);
+        } else {
+            sum = 1;
+            for (int i = 1; i < num.length; i++) {
+                if (num[i] > sum + 1) {
+                    break;
+                } else {
+                    sum += num[i];
+                }
+            }
+            System.out.println(sum + 1);
+        }
+    }
+}
+
+//       이런 Greedy Algorithm 문제가 Algorithm Test를 준비하기 위한 문제인 동시에 매몰 당하지 않아야하는 문제인것 같다.
+//        Test에 유용한 문제인 이유는 특정한 수학적 공식을 알지 못하면 풀기 몹시 어렵기 때문이고
+//        매몰 당하지 않아야하는 문제인 이유도 위와 동일하다.
+//        바꿔말하면 공식을 알기만 하면 쉽게 풀리기 때문에.. 고민하는 데 많은 시간을 쏟는게 좀 허탈하게 느껴지기도 했다.
+//        그래도 개중에는 많은 고민을 거듭한 끝에 수학적 규칙을 간파하는 사람이 있을것이기 때문에, 내가 아직 그런 경지에 이르지 못한 것을 탓해야겠다.
+//        결과적으로 필요한 공식은
+//        'a1=1이고, a(n+1) > S(n)+1일 때 측정할 수 없는 최소 양의 정수는 S(n)+1이다.'
+//        a(n)이 오름차순으로 정렬된  n번째 숫자이고, S(n)은 n번쨰 숫자까지의 누적합이라 하자.
+//        단순화하여 문제로 1 3이 주어질때, 우리는 직관적으로 2가 셈할수 없는 최소 숫자라는 것을 알수있지만,
+//        해당 규칙에 대입하면 이렇게 해석할 수 있다.
+//        'a(1+1)=a(2)=3은 S(1)+1=2보다 크다. 따라서 측정 불가한 최소 값은 S(1)+1인 2이다.'

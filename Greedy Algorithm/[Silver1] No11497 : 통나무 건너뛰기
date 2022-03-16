@@ -1,0 +1,57 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
+
+public class Main {// No11497 통나무 건너뛰기
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int tc = Integer.parseInt(br.readLine());
+
+		for (int i = 0; i < tc; i++) {
+			int nums = Integer.parseInt(br.readLine());
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			int[] arr = new int[nums];
+			for (int j = 0; j < nums; j++) {
+				arr[j] = Integer.parseInt(st.nextToken());
+			}
+			Arrays.sort(arr);
+
+			int strt = arr[arr.length - 1] - arr[arr.length - 2] > arr[1] - arr[0]
+					? arr[arr.length - 1] - arr[arr.length - 2]
+					: arr[1] - arr[0];
+			for (int j = 2; j < arr.length; j += 2) {
+				if (arr[j] - arr[j - 2] > strt) {
+					strt = arr[j] - arr[j - 2];
+				}
+			}
+
+			for (int j = 3; j < arr.length; j += 2) {
+				if (arr[j] - arr[j - 2] > strt) {
+					strt = arr[j] - arr[j - 2];
+				}
+			}
+
+			System.out.println(strt);
+
+		}
+	}
+}
+
+//두 통나무 간의 최대 높이의 차를 최소한으로 줄여야하는 문제이다.
+//다만 통나무가 원형으로 이어져있으므로 단순 정렬만으로는 N[0] 과 N[N.length-1] 간의 차이가 극대화되므로 오답이 발생한다.
+//
+//나는 통나무간의 간격을 줄이기 위해서는
+//최저점 N[0]과 최고점 N[N.length-1] 간의 지점들을 두 부류로 나누어서 찾아야한다고 생각했다.
+//즉 최저점과 최고점을 연결하는 선이 두개가 되도록 해야, 최대 높이의 차를 줄일수 있다고 판단하였다.
+//따라서 N[0], N[2], N[4] ... N[N.length-1] 간의 비교와
+//N[0], N[1], N[3] ... N[N.length-1] 간의 비교를 동시에 해주도록하였다.
+//
+//1. 통나무 목록을 오름차순으로 정렬한다.
+//2. 홀수번째의 통나무간의 최대 높이 차를 계산하고, 짝수번쨰의 통나무간의 최대 높이 차를 계산하여 가장 큰 높이가 정답이 되도록 한다.
+//2-1. 이 때 홀수번째 통나무든 짝수번째 통나무든 0번째 통나무, 그리고 N.length-1 (가장 긴) 번째 통나무와의 비교는 항상 있어야한다. 즉, 홀수번째끼리 비교도 필요하지만 (3번째와 1번째, 5번째와 3번째..) 1번째와 0번째의 비교도 필수적이며 7번째와 8번째의 비교도 필요하다는 의미이다.
+//이를 유념하여 비교해주어, 추출된 최댓값을 출력한다.

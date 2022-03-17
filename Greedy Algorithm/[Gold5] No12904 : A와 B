@@ -1,0 +1,65 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Deque;
+import java.util.LinkedList;
+
+public class Main {// No12904 : A와 B
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String ans = br.readLine();
+        String[] tmp = br.readLine().split("");
+        Deque<String> deque = new LinkedList<>();
+        Deque<String> tmpDeque;
+        for (int i = 0; i < tmp.length; i++) {
+            deque.add(tmp[i]);
+        }
+        String x = "";
+
+        while (deque.size() != ans.length()) {
+            if (deque.peekLast().equals("A")) {
+                deque.pollLast();
+            } else {//"B"
+                deque.pollLast();
+                tmpDeque = new LinkedList<>();
+                while (!deque.isEmpty()) {
+                    tmpDeque.add(deque.pollLast());
+                }
+                deque = tmpDeque;
+            }
+        }
+        String quest = "";
+        while (!deque.isEmpty()) {
+            quest += deque.pollFirst();
+        }
+        if (quest.equals(ans)) {
+            System.out.println("1");
+        } else {
+            System.out.println("0");
+        }
+    }
+}
+
+//        A와 B로만 이루어진 문자열 S는 문자열 T로 변환가능한가?를 맞춰야하는 문제이다.
+//
+//        역시나 이런 문제는 문자열 S를 어떻게 T로 만들까를 고민하기보다는
+//
+//        문자열 T를 S로 되돌릴수있느냐, 를 판별하는 것이 쉽다.
+//
+//        문자 A를 제거할 경우에는 문자열의 순서가 바뀌지 않지만
+//
+//        문자 B를 제거하는 경우, 문자열의 순서가 바뀌므로 Stack이든 Queue든 Deque든 두개 이상의 변수를 설정하여
+//
+//        바뀔때마다 각 문자들의 위치를 바꿔주면 어렵지 않게 맞출수 있을 것같다.
+//
+//        - 정답 소스 중StringBuilder를 이용해서 필요할때마다 끝 문자를 자르고 문자열 위치를 reverse시켜주는 엄청 깔끔한 코드를 보았다.
+//        T = new StringBuilder(T.substring(0, T.length() - 1));
+//        T = T.reverse();
+//        String 클래스는 reverse() 메서드를 제공하지 않는 것은 알고있었는데,
+//        StringBuilder, StringBuffer, Collection클래스에서는 reverse() 메서드를 제공한다는 걸 알수있었다.
+//
+//        1. 문자열 T와 S를 받고, 문자열 S를 덱에 담는다.
+//        2. deque의 size가 문자열 T의 길이와 일치할때까지 deque의 마지막 값을 추출한다.
+//        2-1. 이 때 peek값이 A라면 단순 pop을, B라면 pop 이후에 deque에 담겨있는 문자의 위치를 바꿔준다.(deque 변수를 새로 정의하고 담은 뒤 copy)
+//        3. deque의 size와 문자열 T의 길이가 일치하다면 각 position별 비교를 통해 전체 일치시 1을, 아니라면 0을 출력한다.

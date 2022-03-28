@@ -1,0 +1,33 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+public class Main {// No9095_Top-down : 1, 2, 3 더하기
+	static int[] method = new int [11];
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int testCase = Integer.parseInt(br.readLine());
+		method[1] = 1;
+		method[2] = 2;
+		method[3] = 4;
+
+		for (int i = 0; i < testCase; i++) {
+			int ask = Integer.parseInt(br.readLine());
+			System.out.println(dp(ask));
+		}
+
+	}
+	public static int dp(int a) {
+		if (method[a]!=0) {
+			return method[a];
+		}else {
+			method[a]=dp(a-1)+dp(a-2)+dp(a-3);
+			return method[a];
+		}
+	}
+}
+
+//다음으로는 Top-down 방식으로 구현한 경우이다.
+//재귀 함수를 사용하여 이미 값이 있다면 바로 return하여 계산의 중복을 피해주었다.
+//시간차이는 얼마 나지 않는다. 다른 문제에서 다시 양방향으로 풀어보아야겠다.

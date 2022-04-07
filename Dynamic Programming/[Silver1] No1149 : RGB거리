@@ -1,0 +1,66 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+public class Main {// [Silver1] No1149 : RGB거리
+    static int[] R, G, B;
+    static int[][] minCost;
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int house = Integer.parseInt(br.readLine());
+        R = new int[house];
+        G = new int[house];
+        B = new int[house];
+        minCost = new int[house][3];
+
+        for (int i = 0; i < house; i++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            R[i] = Integer.parseInt(st.nextToken());
+            G[i] = Integer.parseInt(st.nextToken());
+            B[i] = Integer.parseInt(st.nextToken());
+        }
+        minCost[0][0] = R[0];
+        minCost[0][1] = G[0];
+        minCost[0][2] = B[0];
+
+        for (int i = 1; i < house; i++) {
+            dp(i);
+        }
+        int min = 1000000;
+        for (int i = 0; i < 3; i++) {
+            if (minCost[house - 1][i] < min) {
+                min = minCost[house - 1][i];
+            }
+        }
+        System.out.println(min);
+    }
+
+    public static void dp(int a) {
+        if (minCost[a][0] == 0) {
+            minCost[a][0] = Math.min(minCost[a - 1][1] + R[a], minCost[a - 1][2] + R[a]);
+            minCost[a][1] = Math.min(minCost[a - 1][0] + G[a], minCost[a - 1][2] + G[a]);
+            minCost[a][2] = Math.min(minCost[a - 1][0] + B[a], minCost[a - 1][1] + B[a]);
+        }
+    }
+}
+
+//집이 N개 있을 때, N번째 집이 나올 수 있는 색깔의 경우의수를 따져보자.
+//
+//1. N번째 집이 R(Red)일때, N-1번째 집은 G(Green) or B(Blue)여야한다.
+//2. N번쨰 집이 G일때, N-1번째 집은 R or B여야한다.
+//3. N번째 집이 B일때, N-1번째 집은 R or G여야한다.
+//
+//이것을 각각의 배열로 만들어서 매 회마다 X번째 집이
+//R일때의 최소 비용, G일때의 최소 비용, B일때의 최소 비용만 선택적으로 따오도록 한뒤,
+//마지막에 R[N-1], G[N-1], B[N-1]의 비용중 가장 작은 수를 추출하는 아이디어를 구상하였다.
+//
+//4년전에 틀렸던 문제를 이제서야 풀고나니 기분이 새록새록하다. ㅎㅎ
+//
+//1. R, G, B 배열을 구분하여 각 비용을 넣고, 각 색깔별 최소 비용을 담을 수 있는 2차원 배열(minCost)을 정의한다.
+//2. minCost 배열의 R,G,B 각 첫 번째 값은 직접 정의해주고, 나머지 값들은 메모이제이션한다.
+//3. 메모이제이션 시, R의 최소값은 "N번째의 R 비용 + N-1번째의 G의 최소비용"과 "N번째의 R 비용 + N-1번째의 B의 최소비용"을 비교하여 담도록한다.
+//4. 마찬가지로 G의 최소값은 "N번째의 G 비용 + N-1번째의 R의 최소비용"과 "N번째의 G 비용 + N-1번째의 B의 최소비용"을 비교하고,
+//B의 최소값은 "N번째의 B 비용 + N-1번째의 R의 최소비용"과 "N번째의 B 비용 + N-1번째의 G의 최소비용"을 비교하여 담도록한다.
+//5. 최종적으로 3개의 비용을 비교하여 작은 값을 출력한다.

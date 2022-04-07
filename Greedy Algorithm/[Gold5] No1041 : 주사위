@@ -1,0 +1,71 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.StringTokenizer;
+
+public class Main {// [Gold5] No1041 : 주사위
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        long N = Long.parseLong(br.readLine());
+        long[] num = new long[6];
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        for (int i = 0; i < 6; i++) {
+            num[i] = Long.parseLong(st.nextToken());
+        }
+
+        //면 3개의 최소합
+        long x = Math.min(num[0],num[5])+Math.min(num[1],num[4])+Math.min(num[2],num[3]);
+
+        long y= 100;//면 2개의 최소합
+        for (int i = 0; i < 6; i++) {
+            for (int j = i+1; j < 6; j++) {
+                if (i+j!=5 && num[i]+num[j]<y) {//A는 F와, B는 E와, C는 D와 만나지 못한다.
+                    y=num[i]+num[j];
+                }
+            }
+        }
+
+        Arrays.sort(num);
+        long z = num[0];//최소값을 가진 면
+
+        long ans = 0;
+        if (N >= 2) {
+            ans = x*4 + y*((N-2)*4+(N-1)*4) + z*((N-2)*(N-1)*4+(N-2)*(N-2));
+        } else {
+            for (int i = 0; i < 5; i++) {
+                ans += num[i];
+            }
+        }
+        System.out.println(ans);
+    }
+}
+
+
+//1*1*1 = 1개일 경우 : 5(1*1*5)면
+//2*2*2 = 8개일 경우 : 20(2*2*5)면
+//3*3*3 = 27개일 경우 : 45(3*3*5)면
+//4*4*4 = 64개일 경우 : 80(4*4*5)면
+//
+//2. 주사위별 노출되는 면적은 몇개씩일까?
+//
+//1개일 경우 : 면 5개 노출(1개 주사위) = 5
+//8개일 경우 : 면 3개 노출(위 4개 주사위) + 면 2개 노출(1*4=4개) = 12 + 8 + 0 = 20
+//27개일 경우 : 면 3개 노출(위 모서리 4개) + 면 2개 노출(1*4+2*4=12개) * 면 1개 노출(1*2*4+1*1=9개) = 12 + 24 + 9 = 45
+//64개일 경우 : 면 3개 노출(위 모서리 4개) + 면 2개 노출(2*4+3*4=20개) * 면 1개 노출(2*3*4+2*2=28개) = 12 + 40 + 28 = 80
+//N*N*N개일 경우 : 면 3개 노출(위 모서리 4개) + 면 2개 노출((N-2)*4+(N-1)*4) * 면 1개 노출((N-2)*(N-1)*4+(N-2)*(N-2))
+//(단 N은 2보다 같거나 크다.)
+//
+//이렇게해서 풀면 면마다 자리가 있기때문에 단순 정렬로는 틀리고 만다.(간과하여 채점 중 1%에서 실패하고말았다..)
+//
+//ok.. 이제 점화식은 구했고.. 어떤면을 내밀지 구해야한다.
+//
+//2면이 맞닿는 경우의 수는 6C2 (15가지) 중 마주보는 면만 못닿으니까 15-6=9가지
+//A B C D E F가 있을 때,
+//A는 F와, B는 E와, C는 D와 만나지 못한다. 이 경우만 빼고 최소합을 구하자.
+//
+//3면이 맞닿는 경우의 수는 계산할 필요없다.
+//마주보는 면중에서 작은 면만 선택하여 더하면 되기 때문이다.
+//
+//2면의 최소합 X와, 3면의 최소합 Y를 구해서 저 더러운 점화식에 대입한다.

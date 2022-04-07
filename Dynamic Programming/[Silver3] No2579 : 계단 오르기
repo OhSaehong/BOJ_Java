@@ -1,0 +1,77 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+public class Main {// [Silver3] No2579 : 계단 오르기
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int num = Integer.parseInt(br.readLine());
+        int[] stair = new int[300];
+        int[] max = new int[300];
+        for (int i = 0; i < num; i++) {
+            stair[i] = Integer.parseInt(br.readLine());
+        }
+
+        max[0] = stair[0];
+        max[1] = stair[0] + stair[1];
+        max[2] = Math.max(stair[0] + stair[2], stair[1] + stair[2]);
+
+        for (int i = 3; i < num; i++) {
+            max[i] = Math.max(max[i - 3] + stair[i - 1] + stair[i], max[i - 2] + stair[i]);
+        }
+
+        System.out.println(max[num - 1]);
+
+
+    }
+}
+
+//       계단을 오를 때 얻을 수 있는 점수의 최댓값을 출력하는 문제이다.
+//        문제를 푼 후기들을 검색해보면 구현자체는 쉬웠다고하는데
+//        나는 동적 프로그래밍이 아직 익지 않아서 그런지 규칙을 찾고 그것을 쪼개는 게 너무 어려웠다.
+//        처음에는 그리디 알고리즘으로 풀어보려고하였으나, 한번 구현해본 뒤 안된다는 것을 알고 포기.
+//        그리디 알고리즘을 적용하기 위해서는 내가 짠 로직의 결과값이 변화가 없어야하는데,
+//        이 문제는 그렇게 되지 않는다.
+//
+//        예를들어서 계단이 다음과 같이 있다면
+//
+//        1
+//        2
+//        3
+//        4
+//
+//        내가 밟아야하는 계단은 (1, 3, 4) 로 총 8점이다.
+//        나는 이걸 딴에는 그리디 알고리즘으로 적용하고자하여,
+//
+//        "기준이 되는 처음 밟은 계단을 포함한 4개 계단 중,
+//        연속으로 두 칸을 밟지 않도록 하는 제일 작은 점수의 계단만 빼고 점프한다"
+//
+//        라는 로직을 구현했다고 하자.
+//        그러나 계단이 하나 더 늘어 다음과 같이 있다면
+//
+//        1
+//        2
+//        3
+//        4
+//        5
+//
+//        내가 밟아야하는 계단은 (1, 2, 4, 5) 이다.
+//        내가 짠 로직과는 무참히 다른 결과값이 나온다.
+//        따라서 동적 프로그래밍으로 로직을 짜줘야한다..
+
+//        비교는 총 4개의 계단을 기준으로 했다.
+//
+//        왜 3개가 아니라 4개 계단이여야하는지 헷갈려서 정리를 해보았다.
+//
+//        Math.max(cal[a - 3] + stair[a - 1] + stair[a], cal[a - 2] + stair[a])
+//
+//        3개로 비교하는 경우 a번째 계단을 밟을 때의 경우의 수는
+//        OXO
+//        XOO
+//        이다.
+//
+//        DP를 사용하려면 메모이제이션을 해야하고, 그러려면 문제의 규칙이 로직에 담겨야한다.
+//        'a-2까지의 최댓값과 a번 계단의 점수의 합'과 'a-1까지의 최대값과 a번 계단의 점수의 합'을 비교하면,
+//        나는 OXO, XOO를 적어놓았지만 실제로 비교하는 것은 OXO와 OO의 경우만 비교하게 된다.
+//        따라서 강제적으로 OXO와 OXOO를 비교하도록 해야한다.

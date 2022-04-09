@@ -1,0 +1,55 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.StringTokenizer;
+
+public class No10816 {// [Silver4] No10816 : 숫자 카드 2
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int numCase = Integer.parseInt(br.readLine());
+        HashMap<Integer, Integer> hsmp = new HashMap<>();
+        int tmp = 0;
+
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        for (int i = 0; i < numCase; i++) {
+            tmp = Integer.parseInt(st.nextToken());
+            if (!hsmp.isEmpty() && hsmp.containsKey(tmp)) {
+                hsmp.replace(tmp, hsmp.get(tmp) + 1);
+            } else {
+                hsmp.put(tmp, 1);
+            }
+        }
+        int myNum = Integer.parseInt(br.readLine());
+
+        st = new StringTokenizer(br.readLine());
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < myNum; i++) {
+            tmp = Integer.parseInt(st.nextToken());
+            if (hsmp.containsKey(tmp)) {
+                sb.append(hsmp.get(tmp)).append(" ");
+            } else {
+                sb.append("0 ");
+            }
+        }
+        System.out.println(sb.toString());
+    }
+}
+
+//특정 숫자들의 갯수를 카운트하고 출력하는 문제이다.
+//
+//HashMap을 이용하여 풀었다.
+//
+//예전에 풀었을 때는 시간초과가 나서 못풀었는데, HashMap을 이용하는 것 뿐만아니라
+//
+//반복문을 돌면서 단순 출력을 하는것이아니라 StringBuilder에 담는 등의 처리가 필요해보인다.
+//
+//
+//1. HashMap에 숫자카드를 담는다. 이때 카드번호를 key값으로 담고 갯수를 value로 담는다.
+//기존 카드번호가 있다면 key값을 호출하여 갯수를 하나더해준다.
+//2. 상근이가 가진 값을 받아오면서 해당 key값이 있다면 value를, 없다면 0을 append한다.
+//
+//* 카드번호별 value를 변경할때, put이 아니라 replace문을 이용하면 속도를 높일 수 있다.
+//hsmp.put(N, hsmp.get(N)+1)
+//hsmp.replace(N, hsmp.get(N) + 1)

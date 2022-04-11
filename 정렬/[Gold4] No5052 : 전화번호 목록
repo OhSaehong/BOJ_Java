@@ -1,0 +1,69 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.Arrays;
+
+public class Main {// [Gold4] No5052 : 전화번호 목록
+
+	public static void main(String[] args) throws IOException {
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+		int testCase = Integer.parseInt(br.readLine());
+		StringBuilder sb = new StringBuilder();
+		int num;
+		String[] arr;
+		for (int i = 0; i < testCase; i++) {
+			num = Integer.parseInt(br.readLine());
+			arr = new String[num];
+			for (int j = 0; j < arr.length; j++) {
+				arr[j] = br.readLine();
+			}
+
+			Arrays.sort(arr);
+
+			boolean ans = true;
+			for (int j = 0; j < arr.length - 1 && ans; j++) {
+				System.out.println(arr[j]);
+				ans = !arr[j + 1].startsWith(arr[j]);
+			}
+
+			sb.append(ans ? "YES" : "NO").append("\n");
+
+		}
+
+		bw.write(String.valueOf(sb));
+		bw.flush();
+
+	}
+}
+//한 전화번호가 다른 전화번호의 접두어인 경우를 찾는 문제이다.
+//
+//String Type의 실수를 정렬하는 Case를 고민하여 풀 수 있다.
+//
+//이 문제를 풀면서 발생한 애로사항 첫번째는 문제의 몰이해다.
+//
+//문제에서 제시한 제한 조건은 하나의 전화번호가 다른 번호의 '접두어'만 아니여야한다는 것이다.
+//
+//예를들어 번호 목록이 911과 911123이면 911이 911123의 접두어이므로 NO를 출력해야하는게 당연하나
+//
+//나는 포함관계가 아니여야한다고 착각하여 911과 11911의 case에도 NO를 출력해야 한다고 판단하고 문제를 풀었다.
+//(시간 초과가 계속 발생하여 틀린줄도 몰랐다..)
+//
+//역시 소스를 짜기전에 충분한 문제 숙지가 필요함을 배웠다.
+//
+//
+//두 번째로 간과한 것은 기존 method의 미숙달이다.
+//
+//String Type 실수를 오름차순으로 정렬한다든지, String Type의 startsWith 비교구문을 사용하는 등
+//
+//그 쓰임새를 알고는 있다만 적절하게 사용할줄을 몰랐다.
+//
+//
+//1. 전화번호 목록을 String Type으로 받아온뒤 정렬한다.
+// - 전화번호는 길이와 관계없이 앞 숫자가 작은 순서대로 정렬될 것이다.
+//2. for문을 1번 돌면서 i번쨰와 i+1번쨰 번호끼리만 startsWith 함수를 이용해 비교해준다.
+// - 전화번호가 접두어 관계만 아니면된다. 그런데 접두어라 함은 앞의 단어가 온전히 다 붙어 합쳐진 단어이기때문에, 앞뒤 번호끼리만 비교해줘도 무관하다.
+//3. 비교 조건에 일치하는 case가 있다면 NO를, 없다면 YES를 출력한다.

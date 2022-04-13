@@ -1,0 +1,62 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.StringTokenizer;
+
+public class Main { // [Silver5] 8979번 : 올림픽
+    public static void main(String[] args) throws NumberFormatException, IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int[][] nation = new int[Integer.parseInt(st.nextToken())][4];
+        int find = Integer.parseInt(st.nextToken());
+
+        int tmp = 0;
+        for (int i = 0; i < nation.length; i++) {
+            st = new StringTokenizer(br.readLine());
+            tmp = Integer.parseInt(st.nextToken()) - 1;
+            nation[tmp][0] = Integer.parseInt(st.nextToken());
+            nation[tmp][1] = Integer.parseInt(st.nextToken());
+            nation[tmp][2] = Integer.parseInt(st.nextToken());
+            nation[tmp][3] = tmp + 1;
+        }
+        Arrays.sort(nation, new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                if (o1[0] == o2[0]) {
+                    if (o1[1] == o2[1]) {
+                        return o2[2] != o1[2] ? o2[2] - o1[2] : Math.abs(o1[3] - find) - Math.abs(o2[3] - find);
+                    } else {
+                        return o2[1] - o1[1];
+                    }
+                } else {
+                    return o2[0] - o1[0];
+                }
+            }
+        });
+        for (int i = 0; i < nation.length; i++) {
+            if (nation[i][3] == find) {
+                System.out.println(i + 1);
+                break;
+            }
+        }
+    }
+}
+//특정 국가의 올림픽 순위를 출력하는 문제이다.
+//
+//금메달, 은메달, 동메달 총 3개의 값을 비교하여 적절한 순위를 출력한다.
+//
+//Comparator를 이용하여 2차원 배열의 3개 값을 비교하는 것 까지는 어렵지 않았으나,
+//
+//동점일 경우에 순위를 확정지을수 있는 방법에 대한 고민이 필요했다.
+//
+//결과적으로는 2차원배열에 숫자 4개를 넣고,(금/은/동메달, 나라 번호)
+//
+//모든 메달 개수가 동일한 경우, 내가 찾아야하는 나라를 비교우위로 놓도록 compare method에 설정해주었다.
+//
+//메달 개수가 동일하지 않다면, 즉 찾아야하는 나라보다 더 많은 메달을 갖고있는 나라끼리 동점이여도 찾아야하는 나라의 순위 자체는 변함이 없기때문이다.
+//
+//1. N*4의 2차원 배열을 생성하고 [금/은/동메달, 나라 번호] 숫자 데이터를 넣는다.
+//2. 금/은/동메달의 개수별 내림차순으로 정렬을 하되, 모든 메달의 개수가 같으면 찾아야하는 국가 X를 우선 정렬되도록한다.
+//3. 국가 X의 index를 출력한다.

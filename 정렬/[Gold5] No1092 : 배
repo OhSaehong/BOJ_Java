@@ -1,0 +1,74 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.StringTokenizer;
+
+public class Main { //[Gold5] No1092 : 배
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int shp = Integer.parseInt(br.readLine());
+        Integer[] crane = new Integer[shp];
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        for (int j = 0; j < shp; j++) {
+            crane[j] = Integer.parseInt(st.nextToken());
+        }
+        int bx = Integer.parseInt(br.readLine());
+        st = new StringTokenizer(br.readLine());
+        int[][] box = new int[bx][2];
+        for (int j = 0; j < bx; j++) {
+            box[j][0] = Integer.parseInt(st.nextToken());
+        }
+
+        Arrays.sort(box, new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                return o2[0] - o1[0];
+            }
+        });
+        Arrays.sort(crane, Collections.reverseOrder());
+
+        int craneIndex;
+        int finBox = 0;
+        int ans = 0;
+        while (true) {
+            craneIndex = 0;
+            for (int i = 0; i < box.length; i++) {
+                if (crane[craneIndex] >= box[i][0] && box[i][1] == 0) {
+                    box[i][1] = 1;
+                    finBox++;
+                    craneIndex++;
+                }
+                if (craneIndex == crane.length) {
+                    break;
+                }
+            }
+            ans++;
+            if (finBox == box.length || ans > finBox) {
+                System.out.println(finBox == box.length ? ans : "-1");
+                break;
+            }
+
+        }
+
+    }
+}
+
+//박스를 배로 옮기는데 드는 시간의 최솟값을 구하는 문제이다.
+//
+//이 문제에서 크레인의 무게제한을 비중있게 생각할 필요는 없다.
+//
+//무게가 많이 나가는 박스부터 옮기되 들수 있는 무게가 적은 크레인이라도 어느 하나의 박스라도 옮길 수 있도록 체크해주면 된다.
+//
+//따라서 크레인과 박스를 내림차순으로 정렬하고 크레인 배열이 박스 배열을 돌면서 옮겨주면 된다.
+//
+//옮긴 박스는 체크하고, 크레인 배열이 한 번 돌때마다 시간을 1씩 늘린다.
+//
+//1. 크레인 목록은 int 1차원 배열로 - crane[], 박스 목록은 int 2차원 배열로 - box [][2] 생성한다.
+//-> box배열의 1번째 값에는 box의 무게를, 2번째 값에는 옮김 여부(0 or 1)를 넣는다.
+//2. while문을 선언하고, 모든 box가 옮겨졌거나 여러번 크레인이 돌았음에도 box를 옮기지 못한 경우 break한다.
+//3. for문을 돌면서 crane은 높은 무게의 박스부터 순회하면서 옮기기를 실시한다. 이때, 박스의 무게가 크레인의 무게 제한을 초과하는 경우에는 다음 박스를 탐색하도록한다.
+//3-1. crane 배열의 순회가 끝났다면, 시간을 1늘이고 while문을 다시 타도록한다.
+//4. while문의 break는 2번의 조건을 타는데, 모든 box가 옮겨진 경우 시간을 출력하고 box를 옮기지 못했다면 -1을 출력하도록 한다.

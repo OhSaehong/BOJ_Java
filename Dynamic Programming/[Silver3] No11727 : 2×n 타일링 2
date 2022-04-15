@@ -1,0 +1,48 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+public class Main { //[Silver3] No11727 : 2×n 타일링 2
+    static long dp[] = new long[1001];
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int num = Integer.parseInt(br.readLine());
+        dp[1] = 1;
+        dp[2] = 3;
+            for (int i = 3; i < num+1; i++) {
+                dp[i] = (dp[i - 1] + dp[i - 2] * 2) % 10007;
+            }
+        System.out.println(dp[num]);
+    }
+}
+
+//2xn 타일링1 문제를 풀었으면 이 문제도 어렵지 않게 풀수 있을 것 같다.
+//
+//역시 dp 알고리즘의 기본은 쪼개기다.
+//
+//다만 이번에는 2xn 타일링1 문제때와는 달리
+//
+//'2x1 막대가 오는 경우와 1x2 막대가 오는 경우'로 나누지 않고
+//
+//'2x1 막대가 오는 경우와 2x1 막대가 오지 않는 경우'로 나눠주었다.
+//
+//이렇게 나눈 이유는 이번 문제에는 2x2인 정사각형 모양의 막대가 있기 때문이다.
+//
+//초기 데이터는 직접 정의를 해주어야하기 때문에
+//
+//열이 1개인경우와 2개인경우는 직접 입력해주었다.
+//
+//열이 3개 이상인 경우는 점화식
+//
+//dp[n] = dp[n-1] + 2*dp[n-2] 를 이용해주었다.
+//
+//점화식으로 표현하면 복잡해보이지만,
+//
+//dp[n-1]은 n번째 타일이 2x1이 붙었을 때로, 이때의 케이스는 n-1열에서의 타일을 붙이는 경우의 수의 개수와 일치하기에 더해주었다.
+//dp[n-2]는 n번째 타일이 2x2의 정사각형 타일 혹은 1x2의 직사각형 타일 2개가 붙었을 경우로, 이때의 케이스는 n-2열에서의 타일을 붙이는 경우의 수에 2를 곱해야한다.
+//
+//마지막에 10007으로 나눈 나머지를 구해버리면 long type으로도 초과가 나므로 미리미리 나누어준다.
+//
+//1. 점화식 dp[n] = dp[n-1] + 2*dp[n-2] 규칙을 찾고 0번째, 1번째 데이터는 직접 넣어준다..
+//2. for문을 돌며 점화식에 맞추어 dp 배열에 값을 입력한다.
+//3. 매 회 값 입력시 숫자 크기를 조절하기위해 10007으로 나누어 그 몫을 입력하도록한다.

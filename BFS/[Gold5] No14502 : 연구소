@@ -1,0 +1,130 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
+
+public class Main {// [Gold5] No14502 : 연구소
+    static int[][] arr;
+    static ArrayList<Main> arrL = new ArrayList<>();
+    static Queue<Main> q = new LinkedList<>();
+    int x;
+    int y;
+    public Main(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String[] xy = br.readLine().split(" ");
+        int x = Integer.parseInt(xy[0]);
+        int y = Integer.parseInt(xy[1]);
+        int[][] arrOrigin = new int[x][y];
+        arr = new int[x][y];
+        ArrayList<Main> arrVirus = new ArrayList<>();
+
+
+        for (int i = 0; i < x; i++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            for (int j = 0; j < y; j++) {
+                arrOrigin[i][j] = Integer.parseInt(st.nextToken());
+                if (arrOrigin[i][j] == 0) {
+                    arrL.add(new Main(i, j));
+                }
+                ;
+                if (arrOrigin[i][j] == 2) {
+                    arrVirus.add(new Main(i, j));
+                }
+                ;
+            }
+        }
+
+        int max = 0;
+        for (int i = 0; i < arrL.size() - 2; i++) {
+            for (int j = i + 1; j < arrL.size() - 1; j++) {
+                for (int k = j + 1; k < arrL.size(); k++) {
+                    //arr = arrOrigin.clone();
+                    for (int l = 0; l < arr.length; l++) {
+                        for (int m = 0; m < arr[0].length; m++) {
+                            arr[l][m] = arrOrigin[l][m];
+                        }
+                    }
+
+                    Main main = arrL.get(i);
+                    arr[main.x][main.y] = 1;
+                    main = arrL.get(j);
+                    arr[main.x][main.y] = 1;
+                    main = arrL.get(k);
+                    arr[main.x][main.y] = 1;
+
+                    for (int l = 0; l < arrVirus.size(); l++) {
+                        q.add(arrVirus.get(l));
+                    }
+                    int tmp = bfs();
+                    if (tmp > max) {
+                        max = tmp;
+                    }
+                }
+            }
+        }
+
+        System.out.println(max);
+    }
+
+    public static int bfs() {
+        while (!q.isEmpty()) {
+            Main main = q.poll();
+            int x = main.x;
+            int y = main.y;
+            for (int i = -1; i < 2; i += 2) {
+                if (x + i >= 0 && x + i < arr.length && arr[x + i][y] == 0) {
+                    arr[x + i][y] = 2;
+                    q.add(new Main(x + i, y));
+                }
+            }
+            for (int j = -1; j < 2; j += 2) {
+                if (y + j >= 0 && y + j < arr[0].length && arr[x][y + j] == 0) {
+                    arr[x][y + j] = 2;
+                    q.add(new Main(x, y + j));
+                }
+            }
+        }
+
+        int cnt = 0;
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr[0].length; j++) {
+                if (arr[i][j] == 0) {
+                    cnt++;
+                }
+            }
+        }
+        return cnt;
+    }
+
+}
+
+//벽을 세우는 경우의 수만큼 BFS를 돌려보는 방식으로 풀 수 있었다.
+//
+// 우리는 배열에서 0을 갖고있는 위치 3군데를 1로 바꾸어 벽으로 만들 수 있다.
+//
+// 3중 for문을 돌려서 0 3개를 1로 바꾼 뒤, BFS를 적용하여 바이러스를 침투시켜본다.
+//
+// 그 후에 남은 0의 개수를 count하면 해당 case의 안전 영역 크기를 도출할 수 있다.
+//
+// 지도의 최대 크기가 8*8이므로, 최대 60C3의 경우만큼 돌려야하는데
+//
+// 시간제한이 2초라서 풀린 것 같다.
+//
+// 1. 배열 arrOrigin, 큐, ArrayList를 정의하고 배열에 바이러스와 벽 등을 담는다.
+// 2. ArrayList arrL에는 배열의 값이 0인 행, 열을 담는다.
+// (이 ArrayList로 3중 for문을 돌며 기존 배열에 벽을 3개씩 추가해야한다.)
+// 2-1. ArrayList arrVirus에는 배열의 값이 2인 행, 열을 담는다.
+// (이 ArrayList의 값들은 매 3중 for문이 돌 때마다 Queue에 추가하여 BFS로 바이러스를 퍼트리기 위함이다.)
+// 3. 배열 arr을 추가로 하나 더 정의하고, arrOrigin 배열을 복사한다.
+// (벽이 추가하는 case를 계속 test해야하기 때문에 배열 복사가 필요하다. 2차원 배열이라 clone method로 깊은 복사가 안되어, 2중 for문으로 복사해주었다.)
+// 4. 복사된 arr 배열과 초기 virus가 담긴 Queue를 통해 BFS를 구현한다.
+// 5. 해당 Case의 arr내 0의 개수를 세어 안전 영역 크기를 도출한다.
+// 6. 3~5번을 반복하며 최대 안전 영역 크기를 출력한다.

@@ -1,0 +1,87 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
+
+public class Main {// No7576 : 토마토_BFS
+    static int[][] arr;
+    static Queue<TomatoPos> queue = new LinkedList<>();
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String[] xy = br.readLine().split(" ");
+        int x = Integer.parseInt(xy[0]);
+        int y = Integer.parseInt(xy[1]);
+        arr = new int[x][y];
+
+        for (int i = 0; i < y; i++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            for (int j = 0; j < x; j++) {
+                arr[j][i] = Integer.parseInt(st.nextToken());
+                if (arr[j][i] == 1) {
+                    queue.add(new TomatoPos(j, i));
+                }
+            }
+        }
+        System.out.println(bfs());
+
+    }
+
+    public static int bfs() {
+        while (!queue.isEmpty()) {
+            TomatoPos tomato = queue.poll();
+            int x = tomato.x;
+            int y = tomato.y;
+            for (int i = -1; i < 2; i += 2) {
+                if (x + i >= 0 && x + i < arr.length && arr[x + i][y] == 0) {
+                    arr[x + i][y] = arr[x][y] + 1;
+                    queue.add(new TomatoPos(x + i, y));
+                }
+            }
+            for (int j = -1; j < 2; j += 2) {
+                if (y + j >= 0 && y + j < arr[0].length && arr[x][y + j] == 0) {
+                    arr[x][y + j] = arr[x][y] + 1;
+                    queue.add(new TomatoPos(x, y + j));
+                }
+            }
+        }
+
+        int max = 0;
+        stop:
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr[0].length; j++) {
+                if (arr[i][j] == 0) {
+                    max = 0;
+                    break stop;
+                }
+                if (arr[i][j] > max) {
+                    max = arr[i][j];
+                }
+            }
+        }
+        return max - 1;
+    }
+}
+
+class TomatoPos {
+    int x;
+    int y;
+
+    public TomatoPos(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+}
+
+//전형적인 BFS문제이다만.. 나는 DFS로 몇 번 시도해보고서야 완전 틀린 해석이었다는 걸 깨달았다.
+//
+//DFS로 하게되었을 때의 문제점이라면, 각 구역마다 한번의 탐색으로 끝내도 될 것을 계속 접근하여 비효율적으로 만드는 것이다.
+//
+//잘 익은 토마토를 기준으로 너비 우선탐색으로 뻗어나가면, 애초에 검증이 많이 필요없고(며칠 째에 익은 토마토인가? 늦게(혹은 빨리) 탐색한 것은 아닌가? 에 대한 검증이 필요없다., 안익은 토마토인지에 대한 검증만 하면된다.)
+//
+//1. 토마토 밭의 정보를 2차원 배열로 받는다. 잘익은 토마토(숫자 1인 토마토)들의 x, y축을 새로운 type의 변수 TomatoPos로 정의하고 Queue에 추가한다.
+//2. bfs 메소드를 돌린다.
+//2-1. 이 bfs 메소드는 Queue가 빌때까지 수행되는데, Queue는 받아두었던 잘익은 토마토의 위치를 기억했다가, 상하좌우에 안익은 토마토가 있는지 검증하고 이를 Queue에 다시 add한다. 토마토 밭에 옮긴 대상의 위치 값은 기존의 0에서 본 position의 숫자 +1로 바꿔주어 며칠만에 익었는지 count하는 용도로 사용한다.
+//2-2. Queue가 비었다면 2차원 배열을 최종적으로 돌면서 0이 남아있다면 -1을, 그렇지 않다면 최대 일수를 출력한다.

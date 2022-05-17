@@ -1,0 +1,73 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
+
+
+public class Main {// [Silver2] No11725 : 트리의 부모 찾기
+    static ArrayList<Integer>[] arr;
+    static int[] ans;
+    static boolean[] check;
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int num = Integer.parseInt(br.readLine());
+        arr = new ArrayList[num + 1];
+        ans = new int[num + 1];
+        check = new boolean[num + 1];
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = new ArrayList<Integer>();
+        }
+        for (int i = 0; i < num - 1; i++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            int x = Integer.parseInt(st.nextToken());
+            int y = Integer.parseInt(st.nextToken());
+            arr[x].add(y);
+            arr[y].add(x);
+        }
+
+        dfs(1);
+        ans[1] = 1;
+
+        for (int i = 2; i < ans.length; i++) {
+            System.out.println(ans[i]);
+        }
+    }
+
+    public static void dfs(int parent) {
+        check[parent] = true;
+        for (int a : arr[parent]) {
+            if (ans[a] == 0) {
+                ans[a] = parent;
+                if (!check[a]) {
+                    dfs(a);
+                }
+            }
+        }
+    }
+}
+
+
+//DFS와 BFS 모두를 이용해서 풀 수 있는 문제였다.
+//
+//LinkedList 타입의 배열을 정의하는 것이 문제 해결에 도움이 많이 되었다.
+//
+//아직 DFS 및 BFS에 익숙치않아 2가지버전 모두 사용해서 풀어보았다.
+//
+//실제 소스의 차이는 그리 크지 않다.
+//
+//method를 재귀로 할 것인지, while문을 낀 queue로 할 것인지의 차이정도?
+//
+//속도 차이도 유의미하게 크지는 않았다.
+//
+//풀이는 DFS를 기준으로 해볼까한다. 그러나 소스를 비교해보면 BFS로직을 이해하는 것도 어렵지 않을 듯하다.
+//
+//1. LinkedList 타입의 배열 arr을 정의한다. 해당 배열에는 인덱스별 인접한 node들을 정의한다.
+//예를 들어 arr[4]의 ArrayList내 값이 2, 3, 5가 있다면 4번 노드와 연결된 node가 2, 3, 5라는 의미이다.
+//2. 정답을 기록하는 int 타입의 배열, 한번 돌았는지 확인하는 boolean 타입 배열을 정의한다.
+//한번 돌았는 지 check하는 이유는 무한 loop를 방지하기 위함이다.
+//3. 입력값을 받으면서 주의할 점은 양방향으로 배열에 ArrayList를 추가해주어야 한다는 점이다.
+//상당수의 그래프 문제가 그러하듯, 방향성이 없는 node들간에 순서를 확인하기 위함이다. (arr[x].add(y); arr[y].add(x);)
+//4. dfs 메서드를 정의하고 1번 index부터 호출한다.
+//DFS 메서드는 해당 index를 탔는지 여부를 check하고, 정답이 입력되지 않았다면 정답을 담는 배열에 부모 node값(index)를 담도록 한다. 해당 index에 대한 조사가 이루어지지 않았다면 다시 DFS 메서드를 호출한다.

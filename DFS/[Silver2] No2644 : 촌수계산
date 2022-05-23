@@ -2,19 +2,22 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.StringTokenizer;
 
 public class Main {// [Silver2] No2644 : 촌수계산
     static ArrayList<Integer>[] arr;
-    static boolean [] chk;
+    static boolean[] chk;
     static int y;
     static int ans = -1;
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int num = Integer.parseInt(br.readLine());
-        arr = new ArrayList[num+1];
-        chk  = new boolean[num+1];
+        arr = new ArrayList[num + 1];
+        for (int i = 0; i < num + 1; i++) {
+            arr[i] = new ArrayList<>();
+        }
+        chk = new boolean[num + 1];
         StringTokenizer st = new StringTokenizer(br.readLine());
         int x = Integer.parseInt(st.nextToken());
         y = Integer.parseInt(st.nextToken());
@@ -23,23 +26,33 @@ public class Main {// [Silver2] No2644 : 촌수계산
             st = new StringTokenizer(br.readLine());
             int tmp1 = Integer.parseInt(st.nextToken());
             int tmp2 = Integer.parseInt(st.nextToken());
-            arr[tmp1].add(tmp2); arr[tmp2].add(tmp1);
+            arr[tmp1].add(tmp2);
+            arr[tmp2].add(tmp1);
         }
-        dfs(x);
+        dfs(x, 0);
         System.out.println(ans);
     }
-    public  static void dfs(int x){
-        chk[x]= true;
-        ans++;
+
+    public static void dfs(int x, int cnt) {
+
+        chk[x] = true;
+
         for (int a : arr[x]) {
-            if(a==y){
-                ans++;
-                break;
+            if (a == y) {
+                ans = ++cnt;
+                return;
             }
-            if(chk[a]==false){
-                dfs(a);
+            if (chk[a] == false) {
+                cnt++;
+                dfs(a, cnt);
+                cnt--;
             }
         }
-        ans--;
+
     }
 }
+//촌수를 이동함에 따라 count를 해주어야하는 부분에서 약간 헤멨다.
+//특이사항이 있다면, 일반적인 dfs와는 달리 한번 check한 LinkedList에 대해서는 다시 확인을 할 필요가 없다는 점이다.
+// 그렇게 해도 되는 이유는 문제에서 '각 사람의 부모는 최대 한 명만 주어진다.'라고 명시되어 있기 때문이다.
+//이로 인해 tree 구조가 성립되어, 구하고자하는 node기준으로 윗방향이든, 아랫방향이든 한번씩만 탐색하면 된다.
+//따라서 기존 node를 다시 탐색하지 않도록 flag를 바꿔주기만하고(부모 노드와 자식 노드의 탐색을 반복하지 않게하기 위해서) 원복시키지는 않았다.

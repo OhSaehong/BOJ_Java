@@ -1,0 +1,32 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.Queue;
+
+public class Main {// [Silver4] No2164 : 카드4
+    public static void main(String[] args) throws IOException {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        int x = Integer.parseInt(br.readLine());
+
+        Queue<Integer> q = new LinkedList<>();
+
+        for (int i = 1; i <= x; i++) {
+            q.add(i);
+        }
+        while (q.size() > 1) {
+            q.poll();
+            q.add(q.poll());
+        }
+        System.out.println(q.poll());
+    }
+}
+//Queue에 오름차순으로 숫자를 넣은뒤에 규칙대로 빼고, 뺀 숫자를 뒤에 add하여
+//
+//Queue의 size가 1이될 때 남은 값을 출력하면 된다.
+//
+//1. Queue에 오름차순으로 숫자를 add한다.
+//2. while문으로 Queue의 size가 1이 넘는동안 규칙을 반복한다.
+//3. Queue size가 1이 될 때 해당 값을 poll하여 출력한다.
